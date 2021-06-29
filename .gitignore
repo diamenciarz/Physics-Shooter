@@ -361,3 +361,13 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Assets/Kenney/Platformer/Backgrounds
+/Assets/Kenney
+/Assets/kenney_spaceshooterextension
+/Assets/Prefabs
+/Assets/Sounds
+/Library
+/UserSettings
+/Temp
+/ProjectSettings
+/Assets/Scenes

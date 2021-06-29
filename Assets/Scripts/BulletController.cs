@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
+    [Header("Movement Stats")]
     [SerializeField] float bulletSpeed;
     [SerializeField] float deltaStartingRotation;
 

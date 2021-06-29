@@ -6,21 +6,21 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] float movementSpeed;
 
-
+    private Rigidbody2D myRigidbody2D;
     private Quaternion deltaRotation = Quaternion.Euler(0,0,90);
     // Start is called before the first frame update
     void Start()
     {
-        
+        myRigidbody2D = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        MoveOneStep();
+        CheckForInput();
         LookAtMouse();
     }
-    private void MoveOneStep()
+    private void CheckForInput()
     {
         Vector3 moveOneStepVector = Vector3.zero;
 

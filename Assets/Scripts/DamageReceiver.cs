@@ -5,12 +5,30 @@ using UnityEngine;
 public class DamageReceiver : MonoBehaviour
 {
     [SerializeField] int maxHP;
-    [SerializeField] int currentHP;
+    public int currentHP;
     [SerializeField] int team;
-    // Start is called before the first frame update
+    private bool isDestroyed;
+    [Header("Optional")]
+    [SerializeField] GameObject healthBarPrefab;
+
+    private GameObject healthBarGO;
+    private bool isHealthBarOn;
+    ProgressionBarController healthBarScript;
     void Start()
     {
-        
+        currentHP = maxHP;
+
+        CheckForHealthBar();
+    }
+    private void CheckForHealthBar()
+    {
+        if (healthBarPrefab != null)
+        {
+            healthBarGO = Instantiate(healthBarPrefab, transform.position, transform.rotation);
+            healthBarScript = healthBarGO.GetComponent<ProgressionBarController>();
+            healthBarScript.SetObjectToFollow(gameObject);
+            isHealthBarOn = true;
+        }
     }
 
     // Update is called once per frame
@@ -25,6 +43,10 @@ public class DamageReceiver : MonoBehaviour
         {
             if (collisionDamageDealer.GetTeam()!= team)
             {
+                if (collisionDamageDealer.GetDestroyOnCollision())
+                {
+                    Destroy(collision.gameObject);
+                }
                 ReceiveDamage(collisionDamageDealer.GetDamage());
             }
         }
@@ -32,9 +54,21 @@ public class DamageReceiver : MonoBehaviour
     public void ReceiveDamage(int damage)
     {
         currentHP -= damage;
-        if (currentHP <= 0)
+        if (isHealthBarOn)
         {
-            DestroyProperly();
+            healthBarScript.UpdateProgressionBar(currentHP, maxHP);
+        }
+
+        CheckHP();
+    }
+    private void CheckHP()
+    {
+        if (!isDestroyed)
+        {
+            if (currentHP <= 0)
+            {
+                DestroyProperly();
+            }
         }
     }
     public void DestroyProperly()

@@ -62,6 +62,7 @@
     <Compile Include="Assets\Scripts\PlayerMovement.cs" />
     <Compile Include="Assets\Scripts\PlayerShootingController.cs" />
     <Compile Include="Assets\Scripts\BulletController.cs" />
+    <Compile Include="Assets\Scripts\GameObjectCounter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Kenney\Space Shooter Visual Assets\Spritesheet\sheet.xml" />

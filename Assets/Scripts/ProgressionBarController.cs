@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class ProgressionBarController : MonoBehaviour
 {
@@ -20,9 +21,12 @@ public class ProgressionBarController : MonoBehaviour
     Color currentColor;
     private bool isShown = true;
     private float hideOverTime = 0.5f;
-    // Start is called before the first frame update
+
+    PhotonView photonView;
     void Start()
     {
+        photonView = PhotonView.Get(this);
+
         transform.rotation = Quaternion.Euler(0, 1, 0);
         //originalAlfa = healthBarImage.color.a;
     }
@@ -65,40 +69,51 @@ public class ProgressionBarController : MonoBehaviour
             }
         }
     }
-
-    public void UpdateProgressionBar(float newHP, float maxHP)
+    [PunRPC]
+    public void UpdateProgressionBar(int currentValue, int maxValue)
     {
-        if (!isDestroyed)
+        if (photonView.IsMine)
         {
-
-            if (newHP < 0)
+            if (!isDestroyed)
             {
-                newHP = 0;
-            }
-            if (newHP > maxHP)
-            {
-                newHP = maxHP;
-            }
-            float newRatio = newHP / maxHP;
-            newRatio = Mathf.Clamp(newRatio, 0, 1);
-            if (!double.IsNaN(newRatio))
-            {
-                healthBarImage.fillAmount = newRatio;
-                if (useGradient)
+                if (currentValue < 0)
                 {
-                    Color newColor = barColorGradient.Evaluate(newRatio);
-                    newColor.a = originalAlfa;
-                    healthBarImage.color = newColor;
+                    currentValue = 0;
+                }
+                if (currentValue > maxValue)
+                {
+                    currentValue = maxValue;
+                }
 
-                    currentColor = healthBarImage.color;
+                float ratio1 = currentValue;
+                float ratio2 = maxValue;
+
+                float newRatio = ratio1 / ratio2;
+                newRatio = Mathf.Clamp(newRatio, 0, 1);
+
+                if (!double.IsNaN(newRatio))
+                {
+                    healthBarImage.fillAmount = newRatio;
+                    if (useGradient)
+                    {
+                        Color newColor = barColorGradient.Evaluate(newRatio);
+                        newColor.a = originalAlfa;
+                        healthBarImage.color = newColor;
+
+                        currentColor = healthBarImage.color;
+                    }
+                }
+                else
+                {
+                    Debug.Log("Bar ratio: " + newRatio + " object to follow:  " + objectToFollow);
+                    Debug.LogError("NaN");
+
                 }
             }
-            else
-            {
-                Debug.Log("Bar ratio: " + newRatio + " object to follow:  " + objectToFollow);
-                Debug.LogError("NaN");
-
-            }
+        }
+        else
+        {
+            return;
         }
     }
     public void ShowBar(bool isTrue)

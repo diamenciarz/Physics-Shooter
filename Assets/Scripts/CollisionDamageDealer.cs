@@ -2,12 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using ExitGames.Client.Photon;
+using Photon.Realtime;
+using Photon.Pun;
+
 public class CollisionDamageDealer : MonoBehaviour
 {
     [Header("Damage Stats")]
     [SerializeField] int damage;
     [SerializeField] int team;
     [SerializeField] bool destroyOnCollision = true;
+
+    PhotonView photonView;
+    private void Start()
+    {
+        photonView = PhotonView.Get(this);
+    }
     public int GetDamage()
     {
         return damage;
@@ -19,5 +29,48 @@ public class CollisionDamageDealer : MonoBehaviour
     public bool GetDestroyOnCollision()
     {
         return destroyOnCollision;
+    }
+    /*
+    public void OnEvent(EventData photonEvent)
+    {
+        byte eventCode = photonEvent.Code;
+        byte destroyThisBulletEventCode = 1;
+
+        if (eventCode == destroyThisBulletEventCode)
+        {
+
+        }
+    }*/
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        GameObject collisionObject = collision.gameObject;
+
+        DamageReceiver damageReceiver;
+        if (collisionObject.TryGetComponent<DamageReceiver>(out damageReceiver))
+        {
+            if (damageReceiver.GetTeam() != team)
+            {
+                if (destroyOnCollision)
+                {
+                    photonView.RPC("DestroyThisObject", RpcTarget.AllBuffered);
+                }
+            }
+        }
+    }
+
+    public void DestroyThisObject()
+    {
+        Destroy(gameObject);
+    }
+
+    private void OnEnable()
+    {
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+
+    private void OnDisable()
+    {
+        PhotonNetwork.RemoveCallbackTarget(this);
     }
 }

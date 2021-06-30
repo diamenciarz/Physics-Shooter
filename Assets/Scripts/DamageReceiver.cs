@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+using ExitGames.Client.Photon;
+using Photon.Realtime;
 using Photon.Pun;
 
 public class DamageReceiver : MonoBehaviour
@@ -15,8 +18,11 @@ public class DamageReceiver : MonoBehaviour
     private GameObject healthBarGO;
     private bool isHealthBarOn;
     ProgressionBarController healthBarScript;
+    PhotonView photonView;
     void Start()
     {
+        photonView = PhotonView.Get(this);
+
         currentHP = maxHP;
 
         CheckForHealthBar();
@@ -39,19 +45,30 @@ public class DamageReceiver : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        GameObject collisionObject = collision.gameObject;
+
         CollisionDamageDealer collisionDamageDealer;
-        if (collision.gameObject.TryGetComponent<CollisionDamageDealer>(out collisionDamageDealer))
+        if (collisionObject.TryGetComponent<CollisionDamageDealer>(out collisionDamageDealer))
         {
             if (collisionDamageDealer.GetTeam()!= team)
             {
-                if (collisionDamageDealer.GetDestroyOnCollision())
-                {
-                    Destroy(collision.gameObject);
-                }
-                ReceiveDamage(collisionDamageDealer.GetDamage());
+                float damage = collisionDamageDealer.GetDamage();
+                Debug.Log("damage: " + damage);
+                photonView.RPC("ReceiveDamage", RpcTarget.All, damage);
             }
         }
     }
+
+    /*
+    public const byte destroyOtherBulletCode = 1;
+    private void SendDestroyOtherBullet(GameObject objectToDestroy)
+    {
+        object content = objectToDestroy;
+        RaiseEventOptions raiseEventOptions = new RaiseEventOptions { Receivers = ReceiverGroup.All};
+        PhotonNetwork.RaiseEvent(destroyOtherBulletCode,content,raiseEventOptions,SendOptions.SendReliable);
+    }*/
+
+    [PunRPC]
     public void ReceiveDamage(int damage)
     {
         currentHP -= damage;
@@ -68,13 +85,13 @@ public class DamageReceiver : MonoBehaviour
         {
             if (currentHP <= 0)
             {
-                DestroyProperly();
+                photonView.RPC("DestroyProperly", RpcTarget.All);
             }
         }
     }
+    [PunRPC]
     public void DestroyProperly()
     {
-
         Destroy(gameObject);
     }
 
@@ -85,5 +102,9 @@ public class DamageReceiver : MonoBehaviour
     public int GetMaxHP()
     {
         return maxHP;
+    }
+    public int GetTeam()
+    {
+        return team;
     }
 }

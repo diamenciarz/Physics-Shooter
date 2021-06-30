@@ -1,9 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-using ExitGames.Client.Photon;
-using Photon.Realtime;
 using Photon.Pun;
 
 public class DamageReceiver : MonoBehaviour
@@ -14,27 +11,42 @@ public class DamageReceiver : MonoBehaviour
     private bool isDestroyed;
     [Header("Optional")]
     [SerializeField] GameObject healthBarPrefab;
+    [SerializeField] Vector3 healthBarDeltaPositionFromObject;
 
     private GameObject healthBarGO;
     private bool isHealthBarOn;
     ProgressionBarController healthBarScript;
+    PhotonView healthBarView;
     PhotonView photonView;
     void Start()
     {
-        photonView = PhotonView.Get(this);
+        photonView = PhotonView.Get(this); 
 
         currentHP = maxHP;
 
-        CheckForHealthBar();
+        photonView.RPC("CreateHealthBar", RpcTarget.AllBuffered);
+        //CreateHealthBar();
     }
-    private void CheckForHealthBar()
+
+    [PunRPC]
+    private void CreateHealthBar()
     {
-        if (healthBarPrefab != null)
+        if (!isHealthBarOn)
         {
-            healthBarGO = PhotonNetwork.Instantiate(healthBarPrefab.name, transform.position, transform.rotation);
-            healthBarScript = healthBarGO.GetComponent<ProgressionBarController>();
-            healthBarScript.SetObjectToFollow(gameObject);
-            isHealthBarOn = true;
+            if (healthBarPrefab != null)
+            {
+                healthBarGO = PhotonNetwork.Instantiate(healthBarPrefab.name, transform.position, transform.rotation);
+                healthBarScript = healthBarGO.GetComponent<ProgressionBarController>();
+                healthBarScript.SetObjectToFollow(gameObject);
+
+                healthBarView = healthBarGO.GetComponent<PhotonView>();
+                if (healthBarDeltaPositionFromObject.magnitude != 0)
+                {
+                    healthBarScript.SetDeltaPositionToObject(healthBarDeltaPositionFromObject);
+                }
+
+                isHealthBarOn = true;
+            }
         }
     }
 
@@ -43,6 +55,7 @@ public class DamageReceiver : MonoBehaviour
     {
         
     }
+    /*
     private void OnCollisionEnter2D(Collision2D collision)
     {
         GameObject collisionObject = collision.gameObject;
@@ -57,7 +70,7 @@ public class DamageReceiver : MonoBehaviour
                 photonView.RPC("ReceiveDamage", RpcTarget.All, damage);
             }
         }
-    }
+    }*/
 
     /*
     public const byte destroyOtherBulletCode = 1;
@@ -74,9 +87,8 @@ public class DamageReceiver : MonoBehaviour
         currentHP -= damage;
         if (isHealthBarOn)
         {
-            healthBarScript.UpdateProgressionBar(currentHP, maxHP);
+            healthBarView.RPC("UpdateProgressionBar", RpcTarget.AllBuffered, currentHP, maxHP);
         }
-
         CheckHP();
     }
     private void CheckHP()
@@ -85,7 +97,7 @@ public class DamageReceiver : MonoBehaviour
         {
             if (currentHP <= 0)
             {
-                photonView.RPC("DestroyProperly", RpcTarget.All);
+                photonView.RPC("DestroyProperly", RpcTarget.AllBuffered);
             }
         }
     }

@@ -173,6 +173,7 @@ MonoBehaviour:
   currentHP: 0
   team: 1
   healthBarPrefab: {fileID: 8395912166832606940, guid: b99e89717e60aad41a544dd09039b2b7, type: 3}
+  healthBarDeltaPositionFromObject: {x: 0, y: 0, z: 0}
 --- !u!114 &4890741886552585750
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -45,12 +45,15 @@ public class CollisionDamageDealer : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         GameObject collisionObject = collision.gameObject;
+        PhotonView targetView = collision.gameObject.GetComponent<PhotonView>();
 
         DamageReceiver damageReceiver;
         if (collisionObject.TryGetComponent<DamageReceiver>(out damageReceiver))
         {
             if (damageReceiver.GetTeam() != team)
             {
+                targetView.RPC("ReceiveDamage", RpcTarget.AllBuffered, damage);
+
                 if (destroyOnCollision)
                 {
                     photonView.RPC("DestroyThisObject", RpcTarget.AllBuffered);
@@ -58,7 +61,7 @@ public class CollisionDamageDealer : MonoBehaviour
             }
         }
     }
-
+    [PunRPC]
     public void DestroyThisObject()
     {
         Destroy(gameObject);

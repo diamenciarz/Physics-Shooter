@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class DamageReceiver : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class DamageReceiver : MonoBehaviour
     {
         if (healthBarPrefab != null)
         {
-            healthBarGO = Instantiate(healthBarPrefab, transform.position, transform.rotation);
+            healthBarGO = PhotonNetwork.Instantiate(healthBarPrefab.name, transform.position, transform.rotation);
             healthBarScript = healthBarGO.GetComponent<ProgressionBarController>();
             healthBarScript.SetObjectToFollow(gameObject);
             isHealthBarOn = true;

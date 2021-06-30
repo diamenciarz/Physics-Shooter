@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 public class PlayerShootingController : MonoBehaviour
 {
@@ -36,6 +37,6 @@ public class PlayerShootingController : MonoBehaviour
     {
         lastShotTime = Time.time;
         Quaternion spawnRotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + deltaRotation);
-        Instantiate(bulletPrefab, shootingPoint.transform.position, spawnRotation);
+        PhotonNetwork.Instantiate(bulletPrefab.name, shootingPoint.transform.position, spawnRotation);
     }
 }

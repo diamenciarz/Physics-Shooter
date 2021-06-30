@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     PhotonView view;
     private Rigidbody2D myRigidbody2D;
     private Quaternion deltaRotation = Quaternion.Euler(0,0,90);
-    // Start is called before the first frame update
+    private Vector3 moveDirectionVector;
     void Start()
     {
         myRigidbody2D = GetComponent<Rigidbody2D>();
@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (view.IsMine)
         {
@@ -29,11 +29,11 @@ public class PlayerMovement : MonoBehaviour
     }
     private void CheckForInput()
     {
-        Vector3 moveOneStepVector = Vector3.zero;
+        moveDirectionVector = Vector3.zero;
 
-        moveOneStepVector = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"),0) * movementSpeed;
+        moveDirectionVector = new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"),0);
 
-        transform.position += moveOneStepVector * Time.deltaTime;
+        myRigidbody2D.velocity = moveDirectionVector * movementSpeed;
     }
     private void LookAtMouse()
     {

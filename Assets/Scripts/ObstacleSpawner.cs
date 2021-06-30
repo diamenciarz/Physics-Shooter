@@ -134,4 +134,21 @@ public class ObstacleSpawner : MonoBehaviour
         
         return vectorToReturn;
     }
+
+    public float GetGridX()
+    {
+        return gridX;
+    }
+    public float GetGridY()
+    {
+        return gridY;
+    }
+    public float GetXCount()
+    {
+        return xCount;
+    }
+    public float GetYCount()
+    {
+        return yCount;
+    }
 }

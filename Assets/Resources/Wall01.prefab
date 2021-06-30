@@ -13,8 +13,9 @@ GameObject:
   - component: {fileID: 2329204112940793006}
   - component: {fileID: 2329204112940793007}
   - component: {fileID: 3296899354743539856}
+  - component: {fileID: -6802206141221785795}
   m_Layer: 0
-  m_Name: UnbreakableWall
+  m_Name: Wall01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b9bf059942db3834d924a0c481d40720, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3d9ed8868b6a8a240a36481d8738f4b6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -155,3 +156,20 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &-6802206141221785795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2329204112940793004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b60cc2a7f223b04cb36d84a9c9ce171, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHP: 3
+  currentHP: 0
+  team: 2
+  healthBarPrefab: {fileID: 8395912166832606940, guid: b99e89717e60aad41a544dd09039b2b7, type: 3}
+  healthBarDeltaPositionFromObject: {x: 0, y: 0, z: 0}

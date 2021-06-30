@@ -8,6 +8,7 @@ public class ObstacleSpawner : MonoBehaviour
     [Header("Spawn Settings")]
     [SerializeField][Range(0,100)] int spawnPercentageChance;
     [SerializeField] List<GameObject> objectsToSpawnList;
+    [SerializeField] GameObject indestructibleWallPrefab;
     [Header("Grid Settings")]
     [SerializeField] int xCount = 10;
     [SerializeField] int yCount = 10;
@@ -23,6 +24,7 @@ public class ObstacleSpawner : MonoBehaviour
     {
         FillEmptyPositionList();
         SpawnObstaclesInASquare();
+        SorroundMapWithTheIndestructibleWall();
     }
     private void FillEmptyPositionList()
     {
@@ -58,6 +60,39 @@ public class ObstacleSpawner : MonoBehaviour
             }
         }
     }
+    private void SorroundMapWithTheIndestructibleWall()
+    {
+        for (int i = -1; i < xCount + 1; i++)
+        {
+            Vector3 spawnPosition = new Vector3(gridX * i, gridY * (yCount + 1), 0);
+            GameObject objectToSpawn = objectsToSpawnList[Random.Range(0, objectsToSpawnList.Count)];
+            //Spawn the random object at this position
+            GameObject spawnedObject = PhotonNetwork.Instantiate(indestructibleWallPrefab.name, spawnPosition, Quaternion.identity);
+        }
+        for (int i = -1; i < xCount + 1; i++)
+        {
+            Vector3 spawnPosition = new Vector3(gridX * i, gridY * (-1), 0);
+            GameObject objectToSpawn = objectsToSpawnList[Random.Range(0, objectsToSpawnList.Count)];
+            //Spawn the random object at this position
+            GameObject spawnedObject = PhotonNetwork.Instantiate(indestructibleWallPrefab.name, spawnPosition, Quaternion.identity);
+        }
+
+        for (int i = 0; i < yCount + 1; i++)
+        {
+            Vector3 spawnPosition = new Vector3(gridX * xCount, gridY * i, 0);
+            GameObject objectToSpawn = objectsToSpawnList[Random.Range(0, objectsToSpawnList.Count)];
+            //Spawn the random object at this position
+            GameObject spawnedObject = PhotonNetwork.Instantiate(indestructibleWallPrefab.name, spawnPosition, Quaternion.identity);
+        }
+        for (int i = 0; i < yCount + 1; i++)
+        {
+            Vector3 spawnPosition = new Vector3(gridX  * (-1), gridY * i, 0);
+            GameObject objectToSpawn = objectsToSpawnList[Random.Range(0, objectsToSpawnList.Count)];
+            //Spawn the random object at this position
+            GameObject spawnedObject = PhotonNetwork.Instantiate(indestructibleWallPrefab.name, spawnPosition, Quaternion.identity);
+        }
+    }
+
     public void AddObstaclePositionToList(Vector2 positionToAdd)
     {
         obstaclePositionList.Add(positionToAdd);

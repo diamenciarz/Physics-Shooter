@@ -14,8 +14,10 @@ public class CollisionDamageDealer : MonoBehaviour
     [SerializeField] bool destroyMyselfOnCollision = true;
 
     PhotonView photonView;
+    DataCollector dataCollector;
     private void Start()
     {
+        dataCollector = FindObjectOfType<DataCollector>();
         photonView = PhotonView.Get(this);
     }
     public int GetDamage()
@@ -64,6 +66,7 @@ public class CollisionDamageDealer : MonoBehaviour
     [PunRPC]
     public void DestroyThisObject()
     {
+        dataCollector.RemoveBulletFromList(gameObject);
         Destroy(gameObject);
     }
 

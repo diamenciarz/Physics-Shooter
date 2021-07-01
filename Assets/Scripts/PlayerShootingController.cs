@@ -13,11 +13,12 @@ public class PlayerShootingController : MonoBehaviour
     [SerializeField] float shootingCooldown;
 
     private float lastShotTime;
-    void Start()
-    {
-        
-    }
+    DataCollector dataCollector;
 
+    private void Start()
+    {
+        dataCollector = FindObjectOfType<DataCollector>();
+    }
     // Update is called once per frame
     void Update()
     {
@@ -37,6 +38,9 @@ public class PlayerShootingController : MonoBehaviour
     {
         lastShotTime = Time.time;
         Quaternion spawnRotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + deltaRotation);
-        PhotonNetwork.Instantiate(bulletPrefab.name, shootingPoint.transform.position, spawnRotation);
+        GameObject newBullet = PhotonNetwork.Instantiate(bulletPrefab.name, shootingPoint.transform.position, spawnRotation);
+
+        dataCollector.AddBulletGameObjectToList(newBullet);
     }
+    
 }

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2329204112940793007}
   - component: {fileID: 3296899354743539856}
   - component: {fileID: -6802206141221785795}
+  - component: {fileID: 6701953234638867952}
   m_Layer: 0
   m_Name: Wall01
   m_TagString: Untagged
@@ -173,3 +174,15 @@ MonoBehaviour:
   team: 2
   healthBarPrefab: {fileID: 8395912166832606940, guid: b99e89717e60aad41a544dd09039b2b7, type: 3}
   healthBarDeltaPositionFromObject: {x: 0, y: 0, z: 0}
+--- !u!114 &6701953234638867952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2329204112940793004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57d25fe482818864e9a2eb666ccc0c87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class ObstacleSpawner : MonoBehaviour
+public class ObstacleSpawner : MonoBehaviour 
 {
     [Header("Spawn Settings")]
     [SerializeField][Range(0,100)] int spawnPercentageChance;
     [SerializeField] List<GameObject> objectsToSpawnList;
+    [SerializeField][Min(0)] int spawnNewObstaclesIfBelow;
+    [SerializeField] float spawnCooldown;
     [SerializeField] GameObject indestructibleWallPrefab;
     [Header("Grid Settings")]
     [SerializeField] int xCount = 10;
@@ -19,12 +21,15 @@ public class ObstacleSpawner : MonoBehaviour
     public List<GameObject> obstacleList;
     public List<Vector2> obstaclePositionList;
     public List<Vector2> emptyPositionList;
+    Coroutine spawnNewObstaclesCoroutine;
 
     private void Awake()
     {
         FillEmptyPositionList();
         SpawnObstaclesInASquare();
         SorroundMapWithTheIndestructibleWall();
+
+        spawnNewObstaclesCoroutine = StartCoroutine(SpawnNewObstaclesOnGrid());
     }
     private void FillEmptyPositionList()
     {
@@ -48,17 +53,22 @@ public class ObstacleSpawner : MonoBehaviour
                 {
                     Vector3 spawnPosition = new Vector3(gridX * i, gridY * k, 0);
                     GameObject objectToSpawn = objectsToSpawnList[Random.Range(0, objectsToSpawnList.Count)];
-                    //Spawn the random object at this position
-                    GameObject spawnedObject = PhotonNetwork.Instantiate(objectToSpawn.name, spawnPosition, Quaternion.identity);
-                    //Add stats of the spawned object to lists
-                    AddObstacleGameObjectToList(spawnedObject);
 
-                    AddObstaclePositionToList(spawnPosition);
-                    RemoveEmptyPositionFromList(spawnPosition);
-
+                    //Spawn obstacle
+                    SpawnObstacleOnLocation(spawnPosition, objectToSpawn);
                 }
             }
         }
+    }
+    private void SpawnObstacleOnLocation(Vector3 spawnPosition, GameObject objectToSpawn)
+    {
+        //Spawn the random object at this position
+        GameObject spawnedObject = PhotonNetwork.Instantiate(objectToSpawn.name, spawnPosition, Quaternion.identity);
+
+        //Add stats of the spawned object to lists
+        AddObstacleGameObjectToList(spawnedObject);
+        AddObstaclePositionToList(spawnPosition);
+        RemoveEmptyPositionFromList(spawnPosition);
     }
     private void SorroundMapWithTheIndestructibleWall()
     {
@@ -90,6 +100,21 @@ public class ObstacleSpawner : MonoBehaviour
             GameObject objectToSpawn = objectsToSpawnList[Random.Range(0, objectsToSpawnList.Count)];
             //Spawn the random object at this position
             GameObject spawnedObject = PhotonNetwork.Instantiate(indestructibleWallPrefab.name, spawnPosition, Quaternion.identity);
+        }
+    }
+    IEnumerator SpawnNewObstaclesOnGrid()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(spawnCooldown);
+            if (obstacleList.Count < spawnNewObstaclesIfBelow)
+            {
+                Vector3 spawnPosition = ReturnRandomSpawnBlockPositionOnTheGrid();
+                GameObject objectToSpawn = objectsToSpawnList[Random.Range(0, objectsToSpawnList.Count)];
+
+                //Spawn obstacle
+                SpawnObstacleOnLocation(spawnPosition, objectToSpawn);
+            }
         }
     }
 
@@ -167,6 +192,12 @@ public class ObstacleSpawner : MonoBehaviour
         Vector2 vectorToReturn = emptyPositionList[Random.Range(0, emptyPositionList.Count)];
         vectorToReturn += new Vector2(gridX / 2, gridY / 2);
         
+        return vectorToReturn;
+    }
+    public Vector2 ReturnRandomSpawnBlockPositionOnTheGrid()
+    {
+        Vector2 vectorToReturn = emptyPositionList[Random.Range(0, emptyPositionList.Count)];
+
         return vectorToReturn;
     }
 

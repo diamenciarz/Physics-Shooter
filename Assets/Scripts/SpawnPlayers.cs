@@ -15,9 +15,11 @@ public class SpawnPlayers : MonoBehaviour
     private ObstacleSpawner obstacleSpawner;
     private CameraController cameraController;
     private PhotonView photonView;
+    DataCollector dataCollector;
     private bool isMapGenerated;
     public void Start()
     {
+        dataCollector = FindObjectOfType<DataCollector>();
         obstacleSpawner = FindObjectOfType<ObstacleSpawner>();
         cameraController = FindObjectOfType<CameraController>();
         photonView = GetComponent<PhotonView>();
@@ -36,6 +38,8 @@ public class SpawnPlayers : MonoBehaviour
         Debug.Log("Created GO: " + createdPlayerGO);
         //Make this camera follow this player
         cameraController.followGameObject = createdPlayerGO;
+        //Add player to list
+        dataCollector.AddPlayerToList(createdPlayerGO);
     }
     [PunRPC]
     public void MapHasBeenGenerated()

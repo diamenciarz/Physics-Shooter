@@ -16,10 +16,12 @@ public class DamageReceiver : MonoBehaviour
     private bool isHealthBarOn;
     private bool isDestroyed;
     ProgressionBarController healthBarScript;
+    DataCollector dataCollector;
     PhotonView healthBarView;
     PhotonView photonView;
     void Start()
     {
+        dataCollector = FindObjectOfType<DataCollector>();
         photonView = PhotonView.Get(this); 
 
         currentHP = maxHP;
@@ -110,6 +112,7 @@ public class DamageReceiver : MonoBehaviour
     [PunRPC]
     public void DestroyProperly()
     {
+        dataCollector.RemovePlayerFromList(gameObject);
         Destroy(gameObject);
     }
 

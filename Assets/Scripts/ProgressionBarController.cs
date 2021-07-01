@@ -23,7 +23,7 @@ public class ProgressionBarController : MonoBehaviour
     private float hideOverTime = 0.5f;
 
     PhotonView photonView;
-    void Start()
+    void Awake()
     {
         photonView = PhotonView.Get(this);
 

@@ -22,14 +22,21 @@ public class ObstacleSpawner : MonoBehaviour
     public List<Vector2> obstaclePositionList;
     public List<Vector2> emptyPositionList;
     Coroutine spawnNewObstaclesCoroutine;
+    //Privat variab
+    private PhotonView photonView;
 
     private void Awake()
     {
-        FillEmptyPositionList();
-        SpawnObstaclesInASquare();
-        SorroundMapWithTheIndestructibleWall();
+        photonView = GetComponent<PhotonView>();
 
-        spawnNewObstaclesCoroutine = StartCoroutine(SpawnNewObstaclesOnGrid());
+        if (photonView.AmOwner)
+        {
+            FillEmptyPositionList();
+            SpawnObstaclesInASquare();
+            SorroundMapWithTheIndestructibleWall();
+
+            spawnNewObstaclesCoroutine = StartCoroutine(SpawnNewObstaclesOnGrid());
+        }
     }
     private void FillEmptyPositionList()
     {

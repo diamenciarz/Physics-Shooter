@@ -17,7 +17,7 @@ public class FreeGridSpaceOnDestroyed : MonoBehaviour
     private void OnDestroy()
     {
         //photonView.RPC("RemoveMyPositionFromList", RpcTarget.AllBuffered);
-        Debug.Log("Destroyed obstacle");
+        //Debug.Log("Destroyed obstacle");
         RemoveMyPositionFromList();
         
     }

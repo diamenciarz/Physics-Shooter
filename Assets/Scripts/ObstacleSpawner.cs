@@ -24,16 +24,22 @@ public class ObstacleSpawner : MonoBehaviour
     Coroutine spawnNewObstaclesCoroutine;
     //Privat variab
     private PhotonView photonView;
+    private SpawnPlayers spawnPlayers;
+    [HideInInspector]
+    public bool isMapGenerated;
 
     private void Awake()
     {
         photonView = GetComponent<PhotonView>();
+        spawnPlayers = FindObjectOfType<SpawnPlayers>();
 
         if (PhotonNetwork.IsMasterClient)
         {
             FillEmptyPositionList();
             SpawnObstaclesInASquare();
             SorroundMapWithTheIndestructibleWall();
+
+            spawnPlayers.GetComponent<PhotonView>().RPC("MapHasBeenGenerated", RpcTarget.AllBuffered);
 
             spawnNewObstaclesCoroutine = StartCoroutine(SpawnNewObstaclesOnGrid());
         }

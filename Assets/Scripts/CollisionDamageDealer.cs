@@ -11,7 +11,7 @@ public class CollisionDamageDealer : MonoBehaviour
     [Header("Damage Stats")]
     [SerializeField] int damage;
     [SerializeField] int team;
-    [SerializeField] bool destroyOnCollision = true;
+    [SerializeField] bool destroyMyselfOnCollision = true;
 
     PhotonView photonView;
     private void Start()
@@ -28,7 +28,7 @@ public class CollisionDamageDealer : MonoBehaviour
     }
     public bool GetDestroyOnCollision()
     {
-        return destroyOnCollision;
+        return destroyMyselfOnCollision;
     }
     /*
     public void OnEvent(EventData photonEvent)
@@ -54,7 +54,7 @@ public class CollisionDamageDealer : MonoBehaviour
             {
                 targetView.RPC("ReceiveDamage", RpcTarget.AllBuffered, damage);
 
-                if (destroyOnCollision)
+                if (destroyMyselfOnCollision)
                 {
                     photonView.RPC("DestroyThisObject", RpcTarget.AllBuffered);
                 }

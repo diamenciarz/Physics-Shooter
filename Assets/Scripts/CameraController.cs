@@ -111,7 +111,7 @@ public class CameraController : MonoBehaviour
     {
         Vector3 returnVector;
 
-        returnVector = (lastPositionWhenObjectWasAlive - transform.position) / Time.deltaTime;
+        returnVector = (transform.position - lastPositionWhenObjectWasAlive) / Time.deltaTime;
 
         return returnVector;
     }

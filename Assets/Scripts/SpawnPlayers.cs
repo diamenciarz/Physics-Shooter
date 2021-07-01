@@ -15,22 +15,31 @@ public class SpawnPlayers : MonoBehaviour
     private ObstacleSpawner obstacleSpawner;
     private CameraController cameraController;
     private PhotonView photonView;
+    private bool isMapGenerated;
     public void Start()
     {
         obstacleSpawner = FindObjectOfType<ObstacleSpawner>();
         cameraController = FindObjectOfType<CameraController>();
         photonView = GetComponent<PhotonView>();
 
-        SpawnPlayer();
+        StartCoroutine(SpawnPlayer());
     }
-    public void SpawnPlayer()
+    public IEnumerator SpawnPlayer()
     {
-        //Vector2 randomPosition = new Vector2(Random.Range(minX, maxX), Random.Range(minY, maxY));
+        Debug.Log("Map: " + isMapGenerated);
+        yield return new WaitUntil(() => isMapGenerated);
 
         Vector2 randomPosition = obstacleSpawner.ReturnRandomCenterPositionOnTheGrid();
+        Debug.Log("Random position: " + randomPosition);
         Vector3 spawnPosition = new Vector3(randomPosition.x, randomPosition.y, 0);
         GameObject createdPlayerGO = PhotonNetwork.Instantiate(playerToSpawnPrefab.name, spawnPosition, Quaternion.identity);
+        Debug.Log("Created GO: " + createdPlayerGO);
         //Make this camera follow this player
         cameraController.followGameObject = createdPlayerGO;
+    }
+    [PunRPC]
+    public void MapHasBeenGenerated()
+    {
+        isMapGenerated = true;
     }
 }

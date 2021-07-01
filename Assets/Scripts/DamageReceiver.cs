@@ -8,13 +8,13 @@ public class DamageReceiver : MonoBehaviour
     [SerializeField] int maxHP;
     public int currentHP;
     [SerializeField] int team;
-    private bool isDestroyed;
     [Header("Optional")]
     [SerializeField] GameObject healthBarPrefab;
     [SerializeField] Vector3 healthBarDeltaPositionFromObject;
 
     private GameObject healthBarGO;
     private bool isHealthBarOn;
+    private bool isDestroyed;
     ProgressionBarController healthBarScript;
     PhotonView healthBarView;
     PhotonView photonView;
@@ -97,6 +97,12 @@ public class DamageReceiver : MonoBehaviour
         {
             if (currentHP <= 0)
             {
+                RespawnOnDeath respawnOnDeath;
+                if (TryGetComponent<RespawnOnDeath>(out respawnOnDeath))
+                {
+                    respawnOnDeath.ActWhenDestroyed();
+                }
+
                 photonView.RPC("DestroyProperly", RpcTarget.AllBuffered);
             }
         }

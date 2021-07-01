@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 1
   team: 10
-  destroyMyselfOnCollision: 1
+  destroyMyselfOnCollision: 0
 --- !u!114 &-4299219812515049334
 MonoBehaviour:
   m_ObjectHideFlags: 0

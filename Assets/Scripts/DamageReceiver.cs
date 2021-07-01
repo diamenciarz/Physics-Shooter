@@ -99,13 +99,14 @@ public class DamageReceiver : MonoBehaviour
         {
             if (currentHP <= 0)
             {
+                photonView.RPC("DestroyProperly", RpcTarget.AllBuffered);
+                
                 RespawnOnDeath respawnOnDeath;
                 if (TryGetComponent<RespawnOnDeath>(out respawnOnDeath))
                 {
                     respawnOnDeath.ActWhenDestroyed();
                 }
 
-                photonView.RPC("DestroyProperly", RpcTarget.AllBuffered);
             }
         }
     }
@@ -125,7 +126,7 @@ public class DamageReceiver : MonoBehaviour
         return maxHP;
     }
     public int GetTeam()
-    {
+    {   
         return team;
     }
 }

@@ -203,7 +203,7 @@ public class ObstacleSpawner : MonoBehaviour
     public Vector2 ReturnRandomCenterPositionOnTheGrid()
     {
         Vector2 vectorToReturn = emptyPositionList[Random.Range(0, emptyPositionList.Count)];
-        vectorToReturn += new Vector2(gridX / 2, gridY / 2);
+        vectorToReturn += new Vector2(gridX, gridY);
         
         return vectorToReturn;
     }
